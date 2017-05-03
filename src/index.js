@@ -16,7 +16,7 @@ import { createStore } from 'redux'
 //   }
 // }
 
-const function counter (state = 0, action) {
+const counter = function(state = 0, action) {
   switch(action.type) {
     case 'INCREMENT':
       return state + 1
@@ -26,6 +26,14 @@ const function counter (state = 0, action) {
       return state
   }
 }
+
+const Counter = ({value, onIncrement, onDecrement}) => (
+  <div className='counter'>
+    <h1>{value}</h1>
+    <button onClick={onDecrement}>-</button>
+    <button onClick={onIncrement}>+</button>
+  </div>
+)
 
 // display component
 // const Counter = ({
