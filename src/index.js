@@ -5,16 +5,16 @@ import { createStore } from 'redux'
 
 
 // root reducer
-const counter = function(state = 0, action) {
-  switch(action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
-    default:
-      return state
-  }
-}
+// const counter = function(state = 0, action) {
+//   switch(action.type) {
+//     case 'INCREMENT':
+//       return state + 1
+//     case 'DECREMENT':
+//       return state - 1
+//     default:
+//       return state
+//   }
+// }
 
 const function counter (state = 0, action) {
   switch(action.type) {
@@ -26,6 +26,7 @@ const function counter (state = 0, action) {
       return state
   }
 }
+
 // display component
 // const Counter = ({
 //   value,
