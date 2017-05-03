@@ -16,6 +16,16 @@ const counter = function(state = 0, action) {
   }
 }
 
+const function counter (state = 0, action) {
+  switch(action.type) {
+    case 'INCREMENT':
+      return state + 1
+    case 'DECREMENT':
+      return state - 1
+    default:
+      return state
+  }
+}
 // display component
 // const Counter = ({
 //   value,
@@ -30,7 +40,8 @@ const counter = function(state = 0, action) {
 // )
 
 // store
-const store = createStore(counter)
+
+// const store = createStore(counter)
 
 // render component to DOM root element
 // const render = () => {
