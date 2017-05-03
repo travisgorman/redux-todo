@@ -35,6 +35,17 @@ const Counter = ({value, onIncrement, onDecrement}) => (
   </div>
 )
 
+const store = createStore(counter)
+const render = () => {
+  ReactDOM.render(
+    <Counter value={store.getState()}
+      onIncrement={() => store.dispatch({type: 'INCREMENT',})}
+      onDecrement={() => store.dispatch({type: 'DECREMENT',})} />,
+      document.getElementById('counter')
+  )
+}
+store.subscribe(render)
+render()
 // display component
 // const Counter = ({
 //   value,
