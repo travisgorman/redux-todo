@@ -16,7 +16,13 @@ const counter = (state = 0, action) => {
 }
 
 // stateless functional display component
-
+const Counter = ({value, onIncrement, onDecrement }) => (
+  <div className='counter'>
+    <h1>{value}</h1>
+    <button onClick={onDecrement}>{-}</button>
+    <button onClick={onIncrement}>{+}</button>
+  </div>
+)
 
 // this connects the store to the redux devtools
 
