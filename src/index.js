@@ -25,7 +25,7 @@ const Counter = ({value, onIncrement, onDecrement }) => (
 )
 
 // this connects the store to the redux devtools
-
+const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
 // the Redux store
 
