@@ -31,7 +31,16 @@ const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_
 const store = createStore(counter, devTools)
 
 // the render function
-
+const render = () => {
+  ReactDOM.render(
+    <Counter
+      value={store.getState()}
+      onIncrement={() => store.dispatch({type: 'INCREMENT'})}
+      onDecrement={() => store.dispatch({type: 'DECREMENT'})}
+    />,
+    document.getElementById('counter')
+  )
+}
 
 // subscribe to the store
 
