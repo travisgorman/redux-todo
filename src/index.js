@@ -28,7 +28,7 @@ const Counter = ({value, onIncrement, onDecrement }) => (
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
 // the Redux store
-
+const store = createStore(counter, devTools)
 
 // the render function
 
