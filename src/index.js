@@ -43,7 +43,7 @@ const render = () => {
 }
 
 // subscribe to the store
-
+store.subscribe(render)
 
 // call the render function
 
