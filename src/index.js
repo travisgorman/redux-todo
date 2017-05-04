@@ -31,23 +31,23 @@ const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_
 const store = createStore(counter, devTools)
 
 // the createStore function implemented from scratch
-const createStoreFromScratch = (reducer) => {
-  let state;
-  let listeners = []
-  const getState = () => state
-  const dispatch = (action) => {
-    state = reducer(action, state)
-    listeners.forEach(listener => listener())
-  }
-  const subscribe = (listener) => {
-    listeners.push(listener)
-    return () => {
-      listeners = listeners.filter((l) => l !== listener)
-    }
-  }
-  dispatch({})
-  return {getState, dispatch, subscribe}
-}
+// const createStoreFromScratch = (reducer, devTools) => {
+//   let state;
+//   let listeners = []
+//   const getState = () => state
+//   const dispatch = (action) => {
+//     state = reducer(action, state)
+//     listeners.forEach(listener => listener())
+//   }
+//   const subscribe = (listener) => {
+//     listeners.push(listener)
+//     return () => {
+//       listeners = listeners.filter((l) => l !== listener)
+//     }
+//   }
+//   dispatch({})
+//   return {getState, dispatch, subscribe}
+// }
 
 // the render function
 const render = () => {
