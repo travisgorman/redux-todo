@@ -46,5 +46,5 @@ const render = () => {
 store.subscribe(render)
 
 // call the render function
-
+render()
 
