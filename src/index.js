@@ -5,17 +5,6 @@ import { createStore } from 'redux'
 
 
 // root reducer
-// const counter = function(state = 0, action) {
-//   switch(action.type) {
-//     case 'INCREMENT':
-//       return state + 1
-//     case 'DECREMENT':
-//       return state - 1
-//     default:
-//       return state
-//   }
-// }
-
 const counter = function(state = 0, action) {
   switch(action.type) {
     case 'INCREMENT':
@@ -27,6 +16,8 @@ const counter = function(state = 0, action) {
   }
 }
 
+
+
 const Counter = ({value, onIncrement, onDecrement}) => (
   <div className='counter'>
     <h1>{value}</h1>
@@ -35,7 +26,15 @@ const Counter = ({value, onIncrement, onDecrement}) => (
   </div>
 )
 
-const store = createStore(counter)
+// const store = createStore(counter)
+
+// const defaultState = {value: 0}
+
+const store = createStore(
+  counter,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);﻿
+
 const render = () => {
   ReactDOM.render(
     <Counter value={store.getState()}
@@ -44,6 +43,7 @@ const render = () => {
       document.getElementById('counter')
   )
 }
+
 store.subscribe(render)
 render()
 // display component
