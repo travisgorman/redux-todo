@@ -41,14 +41,6 @@ const incrementCounter = (list, index) => {
 
 deepFreeze(listBefore)
 
-// const testAddCounter = () => {
-//   const listBefore = []
-//   const listAfter = [0]
-//   expect(
-//     addCounter(listBefore)
-//   ).toEqual(listAfter)
-// }
-
 const testAddCounter = () => {
   const listA = []
   const listB = [0]
@@ -73,22 +65,6 @@ const testIncrementCounter = () => {
   ).toEqual(listB)
 }
 
-// const testRemoveCounter = () => {
-//   const listBefore = [0, 10, 20]
-//   const listAfter = [0, 20]
-
-//     expect(
-//     removeCounter(listBefore, 1)
-//   ).toEqual(listAfter)
-// }
-
-// const testIncrementCounter = () => {
-//   const listBefore = [0, 10, 20]
-//   const listAfter = [0, 11, 20]
-
-//   expect(
-//     incrementCounter(listBefore, 1)
-//   ).toEqual(listAfter)
-// }
-
 testAddCounter()
+testRemoveCounter()
+testIncrementCounter()
