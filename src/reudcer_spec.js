@@ -57,6 +57,21 @@ const testAddCounter = () => {
   ).toEqual(listB)
 }
 
+const testRemoveCounter = () => {
+  const listA = [0, 10, 20]
+  const listB = [0, 20]
+  expect(
+    removeCounter(listA, 1)
+  ).toEqual(listB)
+}
+
+const testIncrementCounter = () => {
+  const listA = [0, 10, 20]
+  const listB = [0, 11, 20]
+  expect(
+    incrementCounter(listA, 1)
+  ).toEqual(listB)
+}
 
 // const testRemoveCounter = () => {
 //   const listBefore = [0, 10, 20]
