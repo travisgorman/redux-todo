@@ -49,6 +49,15 @@ deepFreeze(listBefore)
 //   ).toEqual(listAfter)
 // }
 
+const testAddCounter = () => {
+  const listA = []
+  const listB = [0]
+  expect(
+    addCounter(listA)
+  ).toEqual(listB)
+}
+
+
 // const testRemoveCounter = () => {
 //   const listBefore = [0, 10, 20]
 //   const listAfter = [0, 20]
