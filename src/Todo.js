@@ -12,10 +12,33 @@ const todos = (state = [], action) => {
           completed: false
         }
       ]
+    case: 'TOGGLE_TODO':
+      return [
+        state.map((todo) => {
+          if (todo.id !== action.id) {
+            return todo
+          }
+          return {
+            ...todo,
+            completed: !todo.completed
+          }
+        })
+      ]
     default:
       return state
   }
 }
+
+  // case: 'TOGGLE_TODO':
+  //   return [
+  //     state.map(todo => {
+  //       todo.id === action.id
+  //         ? todo : {
+  //           ...todo,
+  //           completed: !todo.completed
+  //         }
+  //     })
+  //   ]
 
 // testing the todo reducer
 const testAddTodo = () => {
@@ -52,11 +75,15 @@ const testToggleTodo = () => {
       completed: false
     }
   ]
+  const action = {
+    type: 'TOGGLE_TODO',
+    id: 1
+  }
   const after = [
     {
       id: 0,
       text: 'Add Todo',
-      completed: true
+      completed: false
     },
     {
       id: 1,
