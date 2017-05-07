@@ -1,4 +1,6 @@
-// writing a Todo list reducer -- adding a todo
+// writing a Todo list reducer --
+// adding a todo
+// toggling a todo
 const todos = (state = [], action) => {
   switch(action.type) {
     case 'ADD_TODO':
@@ -10,10 +12,11 @@ const todos = (state = [], action) => {
           completed: false
         }
       ]
-      default:
-        return state
+    default:
+      return state
   }
 }
+
 // testing the todo reducer
 const testAddTodo = () => {
   // state before
@@ -31,6 +34,39 @@ const testAddTodo = () => {
   deepFreeze(before)
   deepFreeze(action)
   // verify that our reduce works
+  expect(
+    todos(before, action)
+  ).toEqual(after)
+}
+
+const testToggleTodo = () => {
+  const before = [
+    {
+      id: 0,
+      text: 'Add Todo',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Toggle Todo',
+      completed: false
+    }
+  ]
+  const after = [
+    {
+      id: 0,
+      text: 'Add Todo',
+      completed: true
+    },
+    {
+      id: 1,
+      text: 'Toggle Todo',
+      completed: true
+    }
+  ]
+  deepFreeze(before)
+  deepFreeze(action)
+
   expect(
     todos(before, action)
   ).toEqual(after)
