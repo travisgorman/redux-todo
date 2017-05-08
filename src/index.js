@@ -1,9 +1,9 @@
 // import React from 'react';
-// import ReactDOM from 'react-dom';
-import './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom';
 import { createStore, combineReducers } from 'redux'
+import './index.css'
 import expect from 'expect'
-// import deepFreeze from 'deep-freeze'
 
 /*
       >>>>> REDUCERS
@@ -12,15 +12,18 @@ import expect from 'expect'
 const todo = (state, action) => {
   switch (action.type) {
     case 'ADD_TODO':
-      return {id: action.id, text: action.text, completed: false}
-    case 'TOGGLE_TODO':
-      // return (state.id !== action.id)
-      //   ? state
-      //   : { ...state, completed: !state.completed }
-      if (state.id !== action.id) {
-        return state
+      return {
+        id: action.id,
+        text: action.text,
+        completed: false
       }
-      return {...state, completed: !state.completed}
+    case 'TOGGLE_TODO':
+      return (state.id !== action.id)
+        ? state
+        : {
+            ...state,
+            completed: !state.completed
+          }
     default:
       return state
   }
@@ -50,6 +53,22 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
   }
 }
 
+// const combineReducers = (reducers) => {
+//   return (state = {}, action) => {
+//     return Object.keys(reducers)
+//       .reduce(
+//         (nextState, key) => {
+//           nextState[key] = reducers[key](
+//             state[key],
+//             action
+//           )
+//         return nextState
+//       },
+//       {}
+//     )
+//   }
+// }
+
 // const todoApp = (state = {}, action) => {
 //   return {
 //     todos: todos(
@@ -63,66 +82,111 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
 //   }
 // }
 
-const todoApp = combineReducers({ todos, visibilityFilter })
+// the Root Reducer
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter
+})
 
 // const { createStore } = Redux;
 const store = createStore(todoApp)
 
-console.log( 'initial state:' )
-console.log( store.getState() )
-console.log( '--------------' )
+let nextTodoId = 0;
+// View Layer - App Component
+class TodoApp extends React.Component {
+  render () {
+    return (
+      <div>
+        <button onClick={() => {
+          store.dispatch({
+            type: 'ADD_TODO',
+            text: 'Test',
+            id: nextTodoId++
+          });
+        }}>
+          Add Todo
+        </button>
+        <ul>
+          {this.props.todos.map(todo =>
+            <li key={todo.id}>
+              {todo.text}
+            </li>
+          )}
+        </ul>
+      </div>
+    )
+  }
+}
 
-console.log( 'Dispatching ADD_TODO' )
-store.dispatch({
-  type: 'ADD_TODO',
-  id: 0,
-  text: 'Learn Redux'
-})
+const render = () => {
+  ReactDOM.render(
+    <TodoApp
+      todos={store.getState().todos} />,
+    document.getElementById('todo')
+  )
+}
+store.subscribe(render)
+render()
 
-console.log( 'current state:' )
-console.log( store.getState() )
-console.log( '--------------' )
 
-console.log( 'Dispatching ADD_TODO again' )
-store.dispatch({
-  type: 'ADD_TODO',
-  id: 1,
-  text: 'Have a coffee'
-})
+// console.log( 'initial state:' )
+// console.log( store.getState() )
+// console.log( '--------------' )
 
-console.log( 'current state:' )
-console.log( store.getState() )
-console.log( '--------------' )
+// console.log( 'Dispatching ADD_TODO' )
+// store.dispatch({
+//   type: 'ADD_TODO',
+//   id: 0,
+//   text: 'Learn Redux'
+// })
 
-console.log( 'Dispatching TOGGLE_TODO' )
-store.dispatch({
-  type: 'TOGGLE_TODO',
-  id: 0
-})
+// console.log( 'current state:' )
+// console.log( store.getState() )
+// console.log( '--------------' )
 
-console.log( 'current state:' )
-console.log( store.getState() )
-console.log( '--------------' )
+// console.log( 'Dispatching ADD_TODO again' )
+// store.dispatch({
+//   type: 'ADD_TODO',
+//   id: 1,
+//   text: 'Have a coffee'
+// })
 
-console.log( 'successfully had a coffee' )
-store.dispatch({
-  type: 'TOGGLE_TODO',
-  id: 1
-})
+// console.log( 'current state:' )
+// console.log( store.getState() )
+// console.log( '--------------' )
 
-console.log( 'current state:' )
-console.log( store.getState() )
-console.log( '--------------' )
+// console.log( 'Dispatching TOGGLE_TODO' )
+// store.dispatch({
+//   type: 'TOGGLE_TODO',
+//   id: 0
+// })
 
-console.log( 'Dispatching SET_VISIBILITY_FILTER' )
-store.dispatch({
-  type: 'SET_VISIBILITY_FILTER',
-  filter: 'SHOW_COMPLETED'
-})
+// console.log( 'current state:' )
+// console.log( store.getState() )
+// console.log( '--------------' )
 
-console.log( 'current state:' )
-console.log( store.getState() )
-console.log( '--------------' )
+// console.log( 'successfully had a coffee' )
+// store.dispatch({
+//   type: 'TOGGLE_TODO',
+//   id: 1
+// })
+
+// console.log( 'current state:' )
+// console.log( store.getState() )
+// console.log( '--------------' )
+
+// console.log( 'Dispatching SET_VISIBILITY_FILTER' )
+// store.dispatch({
+//   type: 'SET_VISIBILITY_FILTER',
+//   filter: 'SHOW_COMPLETED'
+// })
+
+// console.log( 'current state:' )
+// console.log( store.getState() )
+// console.log( '--------------' )
+
+
+
 /*
       >>>>> TESTS
 */
