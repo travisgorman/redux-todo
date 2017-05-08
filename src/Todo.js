@@ -1,8 +1,11 @@
-
-
+import expect from 'expect'
+console.log('expect:', expect )
+import deepFreeze from 'deep-freeze'
+console.log('deepFreeze:', deepFreeze )
 /*
       >>>>> REDUCERS
 */
+
 const todo = (state, action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -18,17 +21,20 @@ const todo = (state, action) => {
 const todos = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
-      return todo(undefined, action)
+      return [...state, todo(undefined, action)]
     case 'TOGGLE_TODO':
       return state.map(t => todo(t, action))
+    case 'REMOVE_TODO':
+      return []
     default:
       return state
   }
 }
 
 /*
-      >>>>> TESTING
+      >>>>> TESTS
 */
+
 const testAddTodo = () => {
   // state before
   const before = []
@@ -41,10 +47,7 @@ const testAddTodo = () => {
   const after = [
     { id: 0, text: 'Learn Redux', completed: false }
   ]
-  // freeze state and action
-  deepFreeze(before)
-  deepFreeze(action)
-  // verify that our reduce works
+
   expect(
     todos(before, action)
   ).toEqual(after)
@@ -79,10 +82,13 @@ const testToggleTodo = () => {
       completed: true
     }
   ]
-  deepFreeze(before)
-  deepFreeze(action)
 
   expect(
     todos(before, action)
   ).toEqual(after)
 }
+
+testAddTodo()
+console.log('all tests passed')
+testToggleTodo()
+console.log('all tests passed')

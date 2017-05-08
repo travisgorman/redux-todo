@@ -1,58 +1,153 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
 import './index.css';
 import { createStore } from 'redux'
+import expect from 'expect'
+// import deepFreeze from 'deep-freeze'
 
-// root reducer
-// declares a default state of 0, and takes an action argument
-// switch statement that returns a new state depending on the type of action
-const counter = function(state = 0, action) {
-  switch(action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
+/*
+      >>>>> REDUCERS
+*/
+
+const todo = (state, action) => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return {id: action.id, text: action.text, completed: false}
+    case 'TOGGLE_TODO':
+      // return (state.id !== action.id)
+      //   ? state
+      //   : { ...state, completed: !state.completed }
+      if (state.id !== action.id) {
+        return state
+      }
+      return {...state, completed: !state.completed}
+    default:
+      return state
+  }
+}
+const todos = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        todo(undefined, action)
+      ]
+    case 'TOGGLE_TODO':
+      return state.map(t => todo(t, action))
+    case 'REMOVE_TODO':
+      return []
     default:
       return state
   }
 }
 
-// stateless functional display component
-// displays the value and shows two buttons
-// each button is given an event handler that will be passed in on render
-const Counter = ({value, onIncrement, onDecrement}) => (
-  <div className='counter'>
-    <h1>{value}</h1>
-    <button onClick={onDecrement}>-</button>
-    <button onClick={onIncrement}>+</button>
-  </div>
-)
+// const { createStore } = Redux;
+const store = createStore(todos)
 
-// this connects the store to the redux devtools
-const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+console.log( 'initial state:' )
+console.log( store.getState() )
+console.log( '--------------' )
 
-// the Redux store
-// uses createStore from Redux
-// takes the reducer (counter)
-// and connects to the devTools in browser
-const store = createStore(counter, devTools);﻿
+console.log( 'Dispatching ADD_TODO' )
+store.dispatch({
+  type: 'ADD_TODO',
+  id: 0,
+  text: 'Learn Redux'
+})
 
-// render function mounts the Counter component to the DOM 'counter' element
-// gets value from the store with store.getState()
-// passes onIncrement and onDecrement props
-// each dispatch an action to the store
-const render = () => {
-  ReactDOM.render(
-    <Counter
-      value={store.getState()}
-      onIncrement={() => store.dispatch({type: 'INCREMENT',})}
-      onDecrement={() => store.dispatch({type: 'DECREMENT',})}
-    />,
-      document.getElementById('counter')
-  )
+console.log( 'current state:' )
+console.log( store.getState() )
+console.log( '--------------' )
+
+console.log( 'Dispatching ADD_TODO again' )
+store.dispatch({
+  type: 'ADD_TODO',
+  id: 1,
+  text: 'Have a coffee'
+})
+
+console.log( 'current state:' )
+console.log( store.getState() )
+console.log( '--------------' )
+
+console.log( 'Dispatching TOGGLE_TODO' )
+store.dispatch({
+  type: 'TOGGLE_TODO',
+  id: 0
+})
+
+console.log( 'current state:' )
+console.log( store.getState() )
+console.log( '--------------' )
+
+console.log( 'successfully had a coffee' )
+store.dispatch({
+  type: 'TOGGLE_TODO',
+  id: 1
+})
+
+console.log( 'current state:' )
+console.log( store.getState() )
+console.log( '--------------' )
+
+/*
+      >>>>> TESTS
+*/
+
+const testAddTodo = () => {
+  const before = []
+  const action = {
+    type: 'ADD_TODO',
+    id: 0,
+    text: 'Learn Redux'
+  }
+  const after = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false
+    }
+  ]
+  expect(
+    todos(before, action)
+  ).toEqual(after)
 }
 
-// subscribe to the store, passing in the render function
-store.subscribe(render)
-// call the render function
-render()
+const testToggleTodo = () => {
+  const before = [
+    {
+      id: 0,
+      text: 'Add Todo',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Toggle Todo',
+      completed: false
+    }
+  ]
+  const action = {
+    type: 'TOGGLE_TODO',
+    id: 1
+  }
+  const after = [
+    {
+      id: 0,
+      text: 'Add Todo',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Toggle Todo',
+      completed: true
+    }
+  ]
+  expect(
+    todos(before, action)
+  ).toEqual(after)
+}
+
+testAddTodo()
+console.log('all tests passed')
+testToggleTodo()
+console.log('all tests passed')
