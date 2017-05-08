@@ -1,3 +1,8 @@
+
+
+/*
+      >>>>> REDUCERS
+*/
 const todo = (state, action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -20,25 +25,7 @@ const todos = (state = [], action) => {
       return state
   }
 }
-// switch case with ternary
-  // case: 'TOGGLE_TODO':
-  //   return [
-  //     state.map(todo => {
-  //       todo.id === action.id
-  //         ? todo : {
-  //           ...todo,
-  //           completed: !todo.completed
-  //         }
-  //     })
-  //   ]
 
-/*
-      >>>>> NOTES
-
-    * how the todos array is updated, and how each individual todo is updated
-
-
-*/
 /*
       >>>>> TESTING
 */
