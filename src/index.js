@@ -1,14 +1,10 @@
-// import React from 'react';
 import React from 'react'
 import ReactDOM from 'react-dom';
 import { createStore, combineReducers } from 'redux'
 import './index.css'
-import expect from 'expect'
+// import expect from 'expect'
 
-/*
-      >>>>> REDUCERS
-*/
-
+// todo reducer ---  called by the todos reducer
 const todo = (state, action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -28,6 +24,8 @@ const todo = (state, action) => {
       return state
   }
 }
+
+// todos reducer
 const todos = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -44,6 +42,7 @@ const todos = (state = [], action) => {
   }
 }
 
+// visibilityFilter reducer
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
@@ -53,45 +52,17 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
   }
 }
 
-// const combineReducers = (reducers) => {
-//   return (state = {}, action) => {
-//     return Object.keys(reducers)
-//       .reduce(
-//         (nextState, key) => {
-//           nextState[key] = reducers[key](
-//             state[key],
-//             action
-//           )
-//         return nextState
-//       },
-//       {}
-//     )
-//   }
-// }
-
-// const todoApp = (state = {}, action) => {
-//   return {
-//     todos: todos(
-//       state.todos,
-//       action
-//     ),
-//     visibilityFilter: visibilityFilter(
-//       state.visibilityFilter,
-//       action
-//     )
-//   }
-// }
-
-// the Root Reducer
+// The Root Reducer
 const todoApp = combineReducers({
   todos,
   visibilityFilter
 })
 
-// const { createStore } = Redux;
+// the Redux store
 const store = createStore(todoApp)
 
 let nextTodoId = 0;
+
 // View Layer - App Component
 class TodoApp extends React.Component {
   render () {
@@ -106,12 +77,22 @@ class TodoApp extends React.Component {
             text: this.input.value,
             id: nextTodoId++
           });
+          console.log('store.todos:', store.getState().todos )
+          this.input.value = ''
         }}>
           Add Todo
         </button>
         <ul>
           {this.props.todos.map(todo =>
-            <li key={todo.id}>
+            <li key={todo.id}
+              onClick={() => {
+                store.dispatch({
+                  type: 'TOGGLE_TODO',
+                  id: todo.id
+                })
+                console.log('todo:', todo )
+              }}
+              style={{textDecoration: todo.completed ? 'line-through' : 'none'}}>
               {todo.text}
             </li>
           )}
@@ -128,128 +109,75 @@ const render = () => {
     document.getElementById('todo')
   )
 }
+
 store.subscribe(render)
 render()
 
+/*  TODO
 
-// console.log( 'initial state:' )
-// console.log( store.getState() )
-// console.log( '--------------' )
+  -- onClick of individual todo, toggle complete
+    -- Todo component
+  -- Footer component with visibility filters
 
-// console.log( 'Dispatching ADD_TODO' )
-// store.dispatch({
-//   type: 'ADD_TODO',
-//   id: 0,
-//   text: 'Learn Redux'
-// })
-
-// console.log( 'current state:' )
-// console.log( store.getState() )
-// console.log( '--------------' )
-
-// console.log( 'Dispatching ADD_TODO again' )
-// store.dispatch({
-//   type: 'ADD_TODO',
-//   id: 1,
-//   text: 'Have a coffee'
-// })
-
-// console.log( 'current state:' )
-// console.log( store.getState() )
-// console.log( '--------------' )
-
-// console.log( 'Dispatching TOGGLE_TODO' )
-// store.dispatch({
-//   type: 'TOGGLE_TODO',
-//   id: 0
-// })
-
-// console.log( 'current state:' )
-// console.log( store.getState() )
-// console.log( '--------------' )
-
-// console.log( 'successfully had a coffee' )
-// store.dispatch({
-//   type: 'TOGGLE_TODO',
-//   id: 1
-// })
-
-// console.log( 'current state:' )
-// console.log( store.getState() )
-// console.log( '--------------' )
-
-// console.log( 'Dispatching SET_VISIBILITY_FILTER' )
-// store.dispatch({
-//   type: 'SET_VISIBILITY_FILTER',
-//   filter: 'SHOW_COMPLETED'
-// })
-
-// console.log( 'current state:' )
-// console.log( store.getState() )
-// console.log( '--------------' )
+  */
 
 
+// const testAddTodo = () => {
+//   const before = []
+//   const action = {
+//     type: 'ADD_TODO',
+//     id: 0,
+//     text: 'Learn Redux'
+//   }
+//   const after = [
+//     {
+//       id: 0,
+//       text: 'Learn Redux',
+//       completed: false
+//     }
+//   ]
+//   expect(
+//     todos(before, action)
+//   ).toEqual(after)
+// }
 
-/*
-      >>>>> TESTS
-*/
-
-const testAddTodo = () => {
-  const before = []
-  const action = {
-    type: 'ADD_TODO',
-    id: 0,
-    text: 'Learn Redux'
-  }
-  const after = [
-    {
-      id: 0,
-      text: 'Learn Redux',
-      completed: false
-    }
-  ]
-  expect(
-    todos(before, action)
-  ).toEqual(after)
-}
-
-const testToggleTodo = () => {
-  const before = [
-    {
-      id: 0,
-      text: 'Add Todo',
-      completed: false
-    },
-    {
-      id: 1,
-      text: 'Toggle Todo',
-      completed: false
-    }
-  ]
-  const action = {
-    type: 'TOGGLE_TODO',
-    id: 1
-  }
-  const after = [
-    {
-      id: 0,
-      text: 'Add Todo',
-      completed: false
-    },
-    {
-      id: 1,
-      text: 'Toggle Todo',
-      completed: true
-    }
-  ]
-  expect(
-    todos(before, action)
-  ).toEqual(after)
-}
+// const testToggleTodo = () => {
+//   const before = [
+//     {
+//       id: 0,
+//       text: 'Add Todo',
+//       completed: false
+//     },
+//     {
+//       id: 1,
+//       text: 'Toggle Todo',
+//       completed: false
+//     }
+//   ]
+//   const action = {
+//     type: 'TOGGLE_TODO',
+//     id: 1
+//   }
+//   const after = [
+//     {
+//       id: 0,
+//       text: 'Add Todo',
+//       completed: false
+//     },
+//     {
+//       id: 1,
+//       text: 'Toggle Todo',
+//       completed: true
+//     }
+//   ]
+//   expect(
+//     todos(before, action)
+//   ).toEqual(after)
+// }
 
 
-testAddTodo()
-console.log('all tests passed')
-testToggleTodo()
-console.log('all tests passed')
+// testAddTodo()
+// console.log('all tests passed')
+// testToggleTodo()
+// console.log('all tests passed')
 
