@@ -63,8 +63,12 @@ const store = createStore(todoApp)
 
 const FilterLink = ({
   filter,
+  currentFilter,
   children
 }) => {
+  if (filter === currentFilter) {
+    return <span>{children}</span>
+  }
   return (
     <a href='#'
       onClick={e => {
@@ -98,9 +102,13 @@ let nextTodoId = 0;
 // View Layer - App Component
 class TodoApp extends React.Component {
   render () {
+    const {
+      todos,
+      visibilityFilter
+    } = this.props
     const visibleTodos = getVisibleTodos(
-      this.props.todos,
-      this.props.visibilityFilter
+      todos,
+      visibilityFilter
     )
     return (
       <div>
@@ -117,33 +125,35 @@ class TodoApp extends React.Component {
         }}>
           Add Todo
         </button>
-        <ul>
-          {visibleTodos.map(todo =>
-            <li key={todo.id}
-              onClick={() => {
-                store.dispatch({
-                  type: 'TOGGLE_TODO',
-                  id: todo.id
-                })
-                console.log('todo:', todo )
-              }}
-              style={{textDecoration: todo.completed ? 'line-through' : 'none'}}>
-              {todo.text}
-            </li>
-          )}
-        </ul>
+
+        <TodoList
+          todos={visibleTodos}
+          onTodoClick={id =>
+            store.dispatch({
+              type: 'TOGGLE_TODO',
+              id
+            })
+          }
+        />
+
         <p>
           Show:
           {'  '}
-          <FilterLink filter='SHOW_ALL'>
+          <FilterLink
+            filter='SHOW_ALL'
+            currentFilter={visibilityFilter}>
             All
           </FilterLink>
           {'  '}
-          <FilterLink filter='SHOW_ACTIVE'>
+          <FilterLink
+            filter='SHOW_ACTIVE'
+            currentFilter={visibilityFilter}>
             Active
           </FilterLink>
           {'  '}
-          <FilterLink filter='SHOW_COMPLETED'>
+          <FilterLink
+            filter='SHOW_COMPLETED'
+            currentFilter={visibilityFilter}>
             Completed
           </FilterLink>
         </p>
@@ -152,6 +162,37 @@ class TodoApp extends React.Component {
   }
 }
 
+const Todo = ({
+  onClick,
+  completed,
+  text
+}) => (
+  <li onClick={onClick}
+    style={{
+      textDecoration:
+        completed ?
+          'line-through' :
+          'none'
+    }}
+  >
+    {text}
+  </li>
+)
+
+const TodoList = ({
+  todos,
+  onTodoClick,
+}) => (
+  <ul>
+    {todos.map(todo =>
+      <Todo
+        key={todo.id}
+        {...todo}
+        onClick={() => onTodoClick(todo.id)}
+      />
+    )}
+  </ul>
+)
 
 
 const render = () => {
@@ -165,13 +206,18 @@ const render = () => {
 store.subscribe(render)
 render()
 
-/*  TODO
 
-  -- onClick of individual todo, toggle complete
-    -- Todo component
-  -- Footer component with visibility filters
+/*
 
-  */
+extract presentational components
+Todo & TodoList
+
+- remove key
+- remove onClick handler and pass it in as a prop
+- pass completed and text as separate props
+*/
+
+
 
 
 // const testAddTodo = () => {
