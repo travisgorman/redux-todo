@@ -1,66 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
-import { createStore, combineReducers } from 'redux'
 import './index.css'
-// import expect from 'expect'
+import store from './reducers.js'
+import { getVisibleTodos } from './reducers'
 
-// todo reducer ---  called by the todos reducer
-const todo = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return {
-        id: action.id,
-        text: action.text,
-        completed: false
-      }
-    case 'TOGGLE_TODO':
-      return (state.id !== action.id)
-        ? state
-        : {
-            ...state,
-            completed: !state.completed
-          }
-    default:
-      return state
-  }
-}
-
-// todos reducer
-const todos = (state = [], action) => {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return [
-        ...state,
-        todo(undefined, action)
-      ]
-    case 'TOGGLE_TODO':
-      return state.map(t => todo(t, action))
-    case 'REMOVE_TODO':
-      return []
-    default:
-      return state
-  }
-}
-
-// visibilityFilter reducer
-const visibilityFilter = (state = 'SHOW_ALL', action) => {
-  switch (action.type) {
-    case 'SET_VISIBILITY_FILTER':
-      return action.filter
-    default:
-      return state
-  }
-}
-
-// The Root Reducer
-const todoApp = combineReducers({
-  todos,
-  visibilityFilter
-})
-
-// the Redux store
-const store = createStore(todoApp)
-
+/*
+  ===================
+  ===================
+      COMPONENTS
+  ===================
+  ===================
+*/
+/*
+  FilterLink
+*/
 const FilterLink = ({
   filter,
   currentFilter,
@@ -81,26 +34,6 @@ const FilterLink = ({
     </a>
   )
 }
-
-const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case 'SHOW_ALL':
-      return todos
-    case 'SHOW_ACTIVE':
-      return todos.filter(t => !t.completed)
-    case 'SHOW_COMPLETED':
-      return todos.filter(t => t.completed)
-    default:
-      return todos
-  }
-}
-/*
-  ===================
-  ===================
-      COMPONENTS
-  ===================
-  ===================
-*/
 /*
   Todo
 */
@@ -141,7 +74,6 @@ const TodoList = ({
     }
   </ul>
 );
-
 /*
   AddTodo
 */
@@ -249,8 +181,6 @@ const TodoApp = ({
   </div>
 )
 
-
-
 const render = () => {
   ReactDOM.render(
     <TodoApp
@@ -261,7 +191,6 @@ const render = () => {
 
 store.subscribe(render)
 render()
-
 
 /*
 
