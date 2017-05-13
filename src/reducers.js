@@ -1,4 +1,4 @@
-import { combineReducers, createStore } from 'redux'
+// import { combineReducers, createStore } from 'redux'
 
 export const todo = (state, action) => {
   switch (action.type) {
@@ -46,6 +46,7 @@ export const visibilityFilter = (state = 'SHOW_ALL', action) => {
       return state
   }
 }
+
 // getVisibleTodos reducer
 export const getVisibleTodos = (todos, filter) => {
   switch (filter) {
@@ -59,11 +60,16 @@ export const getVisibleTodos = (todos, filter) => {
       return todos
   }
 }
-// The Root Reducer
-export const rootReducer = combineReducers({
+
+// Redux rootReducer
+const rootReducer = combineReducers({
   todos,
   visibilityFilter
 })
 
-const store = createStore(rootReducer)
+// Redux store
+const store = createStore(
+  rootReducer
+)
+
 export default store
