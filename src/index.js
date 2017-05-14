@@ -4,15 +4,12 @@ import { createStore, combineReducers } from 'redux'
 // import { Provider, connect } from 'react-redux'
 import './index.css'
 let nextTodoId = 0
-/*
-  ===================
-  ===================
-      REDUCERS
-  ===================
-  ===================
-*/
+
 // todo reducer ---  called by the todos reducer
-const todo = (state, action) => {
+const todo = (
+  state,
+  action
+) => {
   switch (action.type) {
     case 'ADD_TODO':
       return {
@@ -21,8 +18,10 @@ const todo = (state, action) => {
         completed: false
       }
     case 'TOGGLE_TODO':
-      return (state.id !== action.id)
-        ? state
+      return (
+        state.id !==
+        action.id
+      ) ? state
         : {
             ...state,
             completed: !state.completed
@@ -31,9 +30,11 @@ const todo = (state, action) => {
       return state
   }
 }
-
 // todos reducer
-const todos = (state = [], action) => {
+const todos = (
+  state = [],
+  action
+) => {
   switch (action.type) {
     case 'ADD_TODO':
       return [
@@ -41,16 +42,20 @@ const todos = (state = [], action) => {
         todo(undefined, action)
       ]
     case 'TOGGLE_TODO':
-      return state.map(t => todo(t, action))
+      return state.map(t =>
+        todo(t, action)
+      )
     case 'REMOVE_TODO':
       return []
     default:
       return state
   }
 }
-
 // visibilityFilter reducer
-const visibilityFilter = (state = 'SHOW_ALL', action) => {
+const visibilityFilter = (
+  state = 'SHOW_ALL',
+  action
+) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
       return action.filter
@@ -58,95 +63,19 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
       return state
   }
 }
-
 // The Root Reducer
 const todoApp = combineReducers({
   todos,
   visibilityFilter
 })
-
 // the Redux store
 const store = createStore(todoApp)
-/*
-  ===================
-  ===================
-      COMPONENTS
-
-      From TodoApp, extract:
-        - Todo: the individual Todo item rendered
-        - TodoList: maps the `todos` array, and renders visible todos (as according to filter)
-        - AddTodo: text input and button. creates and adds a todo item to the todos array
-        - Footer: Contains 3 links, one for each filter, show all, active, or completed
-  ===================
-  ===================
-*/
-
-
-
-
-
-
-const Link = ({
-  active,
-  onClick,
-  children,
-}) => {
-  return (
-    active
-      ? <span>{children}</span>
-      : <a href='#'
-          onClick={e => {
-          e.preventDefault()
-          onClick()
-        }}>
-          {children}
-        </a>
-  )
-}
-
-
-
-class FilterLink extends React.Component {
-  componentDidMount() {
-    this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
-    )
-  }
-  componentWillUnmount() {
-    this.unsubscribe()
-  }
-  render () {
-    const props = this.props
-    const state = store.getState()
-
-    return (
-      <Link
-        active={
-          props.filter ===
-          state.visibilityFilter
-        }
-        onClick={() =>
-          store.dispatch({
-            type: 'SET_VISIBILITY_FILTER',
-            filter: props.filter
-          })
-        }
-      >
-        {props.children}
-      </Link>
-    )
-  }
-}
-
-
-
-const Footer = ({
-  visibilityFilter,
-  onFilterClick
-}) => (
+// =========================
+// ========================= Footer
+const Footer = () => (
   <p>
     Show:
-    {'  '}
+      {'  '}
     <FilterLink
       filter='SHOW_ALL'>
       All
@@ -163,7 +92,56 @@ const Footer = ({
     </FilterLink>
   </p>
 )
+// =========================
+// ========================= Link
+const Link = ({
+  active,
+  onClick,
+  children
+}) => active
+  ? <span>{children}</span>
+  : <a
+      href='#'
+      onClick={e => {
+        e.preventDefault()
+        onClick()
+      }}>
+      {children}
+    </a>
 
+// =========================
+// ========================= FilterLink
+class FilterLink extends React.Component {
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(
+      () => this.forceUpdate()
+    )
+  }
+  componentWillUnmount() {
+    this.unsubscribe()
+  }
+  render () {
+    const props = this.props
+    const state = store.getState()
+    return (
+      <Link
+        active={
+          props.filter ===
+          state.visibilityFilter
+        }
+        onClick={() => store.dispatch({
+            type: 'SET_VISIBILITY_FILTER',
+            filter: props.filter
+          })
+        }
+      >
+        {props.children}
+      </Link>
+    )
+  }
+}
+// =========================
+// ========================= Todo
 const Todo = ({
   onClick,
   completed,
@@ -180,7 +158,8 @@ const Todo = ({
     {text}
   </li>
 )
-
+// =========================
+// ========================= TodoList
 const TodoList = ({
   todos,
   onTodoClick,
@@ -197,7 +176,8 @@ const TodoList = ({
     )}
   </ul>
 )
-
+// =========================
+// ========================= AddTodo
 const AddTodo = ({
   onAddClick
 }) => {
@@ -205,22 +185,23 @@ const AddTodo = ({
   return (
     <div>
       <input
-          ref={
-            node => input = node
-          }
-        />
-        <button
-          onClick={() => {
-            onAddClick(input.value)
-            input.value = ''
-          }}
-        >
-          Add Todo
-        </button>
+        ref={node =>
+          input = node
+        }
+      />
+      <button
+        onClick={() => {
+          onAddClick(input.value)
+          input.value = ''
+        }}
+      >
+        Add Todo
+      </button>
     </div>
   )
 }
-
+// =========================
+// ========================= getVisibleTodos
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
     case 'SHOW_ALL':
@@ -233,7 +214,8 @@ const getVisibleTodos = (todos, filter) => {
       return todos
   }
 }
-
+// =========================
+// ========================= TodoApp
 const TodoApp = ({
   todos,
   visibilityFilter,
@@ -265,8 +247,8 @@ const TodoApp = ({
     <Footer />
   </div>
 )
-
-
+// =========================
+// ========================= render
 const render = () => {
   ReactDOM.render(
     <TodoApp
@@ -274,7 +256,8 @@ const render = () => {
     document.getElementById('todo')
   )
 }
-
+// =========================
+// ========================= subscribe to store
 store.subscribe(render)
 render()
 
