@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom';
 import { createStore, combineReducers } from 'redux'
 import './index.css'
+let nextTodoId = 0
 /*
   ===================
   ===================
@@ -10,9 +11,6 @@ import './index.css'
   ===================
 */
 // todo reducer ---  called by the todos reducer
-console.log(
-  'hello Travis'
-)
 const todo = (state, action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -96,38 +94,6 @@ const getVisibleTodos = (todos, filter) => {
   ===================
 */
 
-const Todo = ({
-onClick,
-completed,
-text
-}) => (
-  <li
-    onClick={onClick}
-    style={{
-      textDecoration: completed
-        ? 'line-through'
-        : 'none'}
-    }
-  >
-    {text}
-  </li>
-)
-const TodoList = ({
-  todos,
-  onTodoClick,
-}) => (
-  <ul>
-    {todos.map(todo =>
-      <Todo
-        key={todo.id}
-        {...todo}
-        onClick={() =>
-          onTodoClick(todo.id)
-        }
-      />
-    )}
-  </ul>
-)
 
 const AddTodo = ({
   onAddClick
@@ -149,6 +115,25 @@ const AddTodo = ({
           Add Todo
         </button>
     </div>
+  )
+}
+
+const FilterLink = ({
+  filter,
+  currentFilter,
+  onClick,
+  children,
+}) => {
+  return (
+    filter === currentFilter
+      ? <span>{children}</span>
+      : <a href='#'
+          onClick={e => {
+          e.preventDefault()
+          onClick(filter)
+        }}>
+          {children}
+        </a>
   )
 }
 
@@ -185,26 +170,40 @@ const Footer = ({
   </p>
 )
 
-const FilterLink = ({
-  filter,
-  currentFilter,
+const Todo = ({
   onClick,
-  children,
-}) => {
-  return (
-    filter === currentFilter
-      ? <span>{children}</span>
-      : <a href='#'
-          onClick={e => {
-          e.preventDefault()
-          onClick(filter)
-        }}>
-          {children}
-        </a>
-  )
-}
+  completed,
+  text
+}) => (
+  <li
+    onClick={onClick}
+    style={{
+      textDecoration: completed
+        ? 'line-through'
+        : 'none'
+    }}
+  >
+    {text}
+  </li>
+)
 
-let nextTodoId = 0
+const TodoList = ({
+  todos,
+  onTodoClick,
+}) => (
+  <ul>
+    {todos.map(todo =>
+      <Todo
+        key={todo.id}
+        {...todo}
+        onClick={() =>
+          onTodoClick(todo.id)
+        }
+      />
+    )}
+  </ul>
+)
+
 const TodoApp = ({
   todos,
   visibilityFilter,
