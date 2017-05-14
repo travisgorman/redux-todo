@@ -156,7 +156,7 @@ const Footer = ({
   visibilityFilter,
   onFilterClick
 }) => (
-    <p>
+  <p>
     Show:
     {'  '}
     <FilterLink
@@ -185,24 +185,22 @@ const Footer = ({
   </p>
 )
 
-// const FilterLink = () => {}
 const FilterLink = ({
   filter,
   currentFilter,
   onClick,
   children,
 }) => {
-  if (filter === currentFilter) {
-    return <span>{children}</span>
-  }
   return (
-    <a href='#'
-      onClick={e => {
-        e.preventDefault()
-        onClick(filter)
-      }}>
-      {children}
-    </a>
+    filter === currentFilter
+      ? <span>{children}</span>
+      : <a href='#'
+          onClick={e => {
+          e.preventDefault()
+          onClick(filter)
+        }}>
+          {children}
+        </a>
   )
 }
 
