@@ -178,9 +178,7 @@ const TodoList = ({
 )
 // =========================
 // ========================= AddTodo
-const AddTodo = ({
-  onAddClick
-}) => {
+const AddTodo = () => {
   let input
   return (
     <div>
@@ -191,7 +189,11 @@ const AddTodo = ({
       />
       <button
         onClick={() => {
-          onAddClick(input.value)
+          store.dispatch({
+            type: 'ADD_TODO',
+            id: nextTodoId++,
+            text: input.value
+          })
           input.value = ''
         }}
       >
@@ -247,37 +249,24 @@ class VisibleTodoList extends React.Component {
 }
 // =========================
 // ========================= TodoApp
-const TodoApp = ({
-  todos,
-  visibilityFilter,
-}) => (
+const TodoApp = () => (
   <div>
-    <AddTodo
-      onAddClick={text =>
-        store.dispatch({
-          type: 'ADD_TODO',
-          id: nextTodoId++,
-          text
-        })
-      }
-    />
+    <AddTodo />
     <VisibleTodoList />
     <Footer />
   </div>
 )
 // =========================
 // ========================= render
-const render = () => {
   ReactDOM.render(
-    <TodoApp
-      {...store.getState()} />,
+    <TodoApp {...store.getState()} />,
     document.getElementById('todo')
   )
-}
+
 // =========================
 // ========================= subscribe to store
-store.subscribe(render)
-render()
+// store.subscribe(render)
+// render()
 
 /*  TODO
 
