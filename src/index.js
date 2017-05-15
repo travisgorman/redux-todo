@@ -5,7 +5,8 @@ import { createStore, combineReducers } from 'redux'
 import './index.css'
 let nextTodoId = 0
 
-// todo reducer ---  called by the todos reducer
+// =========================
+// ========================= todo reducer
 const todo = (
   state,
   action
@@ -30,7 +31,8 @@ const todo = (
       return state
   }
 }
-// todos reducer
+// =========================
+// ========================= todos reducer
 const todos = (
   state = [],
   action
@@ -51,7 +53,8 @@ const todos = (
       return state
   }
 }
-// visibilityFilter reducer
+// =========================
+// ========================= visibilityFilter reducer
 const visibilityFilter = (
   state = 'SHOW_ALL',
   action
@@ -63,31 +66,27 @@ const visibilityFilter = (
       return state
   }
 }
-// The Root Reducer
-const todoApp = combineReducers({
-  todos,
-  visibilityFilter
-})
-// the Redux store
-const store = createStore(todoApp)
 // =========================
 // ========================= Footer
-const Footer = () => (
+const Footer = ({ store }) => (
   <p>
     Show:
       {'  '}
     <FilterLink
-      filter='SHOW_ALL'>
+      filter='SHOW_ALL'
+      store={store}>
       All
     </FilterLink>
       {'  '}
     <FilterLink
-      filter='SHOW_ACTIVE'>
+      filter='SHOW_ACTIVE'
+      store={store}>
       Active
     </FilterLink>
       {'  '}
     <FilterLink
-      filter='SHOW_COMPLETED'>
+      filter='SHOW_COMPLETED'
+      store={store}>
       Completed
     </FilterLink>
   </p>
@@ -113,8 +112,9 @@ const Link = ({
 // ========================= FilterLink
 class FilterLink extends React.Component {
   componentDidMount() {
-    this.unsubscribe = store.subscribe(
-      () => this.forceUpdate()
+    const { store } = this.props
+    this.unsubscribe = store.subscribe(() =>
+      this.forceUpdate()
     )
   }
   componentWillUnmount() {
@@ -122,6 +122,7 @@ class FilterLink extends React.Component {
   }
   render () {
     const props = this.props
+    const { store } = props
     const state = store.getState()
     return (
       <Link
@@ -129,7 +130,8 @@ class FilterLink extends React.Component {
           props.filter ===
           state.visibilityFilter
         }
-        onClick={() => store.dispatch({
+        onClick={() =>
+          store.dispatch({
             type: 'SET_VISIBILITY_FILTER',
             filter: props.filter
           })
@@ -178,7 +180,7 @@ const TodoList = ({
 )
 // =========================
 // ========================= AddTodo
-const AddTodo = () => {
+const AddTodo = ({ store }) => {
   let input
   return (
     <div>
@@ -220,6 +222,7 @@ const getVisibleTodos = (todos, filter) => {
 // ========================= TodoApp
 class VisibleTodoList extends React.Component {
   componentDidMount() {
+    const { store } = this.props
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     )
@@ -228,6 +231,8 @@ class VisibleTodoList extends React.Component {
     this.unsubscribe()
   }
   render () {
+    const props = this.props
+    const { store } = props
     const state = store.getState()
     return (
       <TodoList
@@ -248,91 +253,33 @@ class VisibleTodoList extends React.Component {
   }
 }
 // =========================
-// ========================= TodoApp
-const TodoApp = () => (
+// ========================= TodoApp - root component
+const TodoApp = ({ store }) => (
   <div>
-    <AddTodo />
-    <VisibleTodoList />
-    <Footer />
+    <AddTodo store={store}/>
+    <VisibleTodoList store={store}/>
+    <Footer store={store} />
   </div>
 )
 // =========================
+// ========================= root reducer
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter
+})
+// =========================
+// ========================= store
+
+// =========================
 // ========================= render
   ReactDOM.render(
-    <TodoApp {...store.getState()} />,
+    <TodoApp store={createStore(todoApp)} />,
     document.getElementById('todo')
   )
 
 // =========================
 // ========================= subscribe to store
+
 // store.subscribe(render)
 // render()
-
-/*  TODO
-
-  -- onClick of individual todo, toggle complete
-    -- Todo component
-  -- Footer component with visibility filters
-
-  */
-
-
-// const testAddTodo = () => {
-//   const before = []
-//   const action = {
-//     type: 'ADD_TODO',
-//     id: 0,
-//     text: 'Learn Redux'
-//   }
-//   const after = [
-//     {
-//       id: 0,
-//       text: 'Learn Redux',
-//       completed: false
-//     }
-//   ]
-//   expect(
-//     todos(before, action)
-//   ).toEqual(after)
-// }
-
-// const testToggleTodo = () => {
-//   const before = [
-//     {
-//       id: 0,
-//       text: 'Add Todo',
-//       completed: false
-//     },
-//     {
-//       id: 1,
-//       text: 'Toggle Todo',
-//       completed: false
-//     }
-//   ]
-//   const action = {
-//     type: 'TOGGLE_TODO',
-//     id: 1
-//   }
-//   const after = [
-//     {
-//       id: 0,
-//       text: 'Add Todo',
-//       completed: false
-//     },
-//     {
-//       id: 1,
-//       text: 'Toggle Todo',
-//       completed: true
-//     }
-//   ]
-//   expect(
-//     todos(before, action)
-//   ).toEqual(after)
-// }
-
-
-// testAddTodo()
-// console.log('all tests passed')
-// testToggleTodo()
-// console.log('all tests passed')
 
