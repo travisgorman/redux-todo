@@ -140,12 +140,13 @@ const mapStateToLinkProps = (
 ) => {
   return {
     active:
-      props.filter ===
+      ownProps.filter ===
       state.visibilityFilter
   }
 }
 const mapDispatchToLinkProps = (
-  dispatch
+  dispatch,
+  ownProps
 ) => {
   return {
     onClick: () => {
